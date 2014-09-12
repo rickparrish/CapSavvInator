@@ -5,4 +5,4 @@ CapSavvinator is a website (based on CapSavvy) that can retrieve your data trans
 
 (Actually it only supports Start right now, since I need Usernames / API Keys for the other providers before I can port and test the code from CapSavvy)
 
-Check it out at http://csi.randm.ca
+Check it out at https://csi.randm.ca or http://csi.randm.ca
