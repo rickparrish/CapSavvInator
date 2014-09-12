@@ -64,33 +64,33 @@
     $data["AllTP"] = $data["AllTA"] * $DaysInMonth;
 
     // Format the data
-    $data["PaidD"] = formatBytes($data["PaidD"], 2);
-    $data["PaidU"] = formatBytes($data["PaidU"], 2);
-    $data["PaidT"] = formatBytes($data["PaidT"], 2);
-    $data["PaidDA"] = formatBytes($data["PaidDA"], 2);
-    $data["PaidUA"] = formatBytes($data["PaidUA"], 2);
-    $data["PaidTA"] = formatBytes($data["PaidTA"], 2);
-    $data["PaidDP"] = formatBytes($data["PaidDP"], 2);
-    $data["PaidUP"] = formatBytes($data["PaidUP"], 2);
-    $data["PaidTP"] = formatBytes($data["PaidTP"], 2);
-    $data["FreeD"] = formatBytes($data["FreeD"], 2);
-    $data["FreeU"] = formatBytes($data["FreeU"], 2);
-    $data["FreeT"] = formatBytes($data["FreeT"], 2);
-    $data["FreeDA"] = formatBytes($data["FreeDA"], 2);
-    $data["FreeUA"] = formatBytes($data["FreeUA"], 2);
-    $data["FreeTA"] = formatBytes($data["FreeTA"], 2);
-    $data["FreeDP"] = formatBytes($data["FreeDP"], 2);
-    $data["FreeUP"] = formatBytes($data["FreeUP"], 2);
-    $data["FreeTP"] = formatBytes($data["FreeTP"], 2);
-    $data["AllD"] = formatBytes($data["AllD"], 2);
-    $data["AllU"] = formatBytes($data["AllU"], 2);
-    $data["AllT"] = formatBytes($data["AllT"], 2);
-    $data["AllDA"] = formatBytes($data["AllDA"], 2);
-    $data["AllUA"] = formatBytes($data["AllUA"], 2);
-    $data["AllTA"] = formatBytes($data["AllTA"], 2);
-    $data["AllDP"] = formatBytes($data["AllDP"], 2);
-    $data["AllUP"] = formatBytes($data["AllUP"], 2);
-    $data["AllTP"] = formatBytes($data["AllTP"], 2);
+    $data["PaidD"] = formatBytes($data["PaidD"], 1, $data["KiloSize"]);
+    $data["PaidU"] = formatBytes($data["PaidU"], 1, $data["KiloSize"]);
+    $data["PaidT"] = formatBytes($data["PaidT"], 1, $data["KiloSize"]);
+    $data["PaidDA"] = formatBytes($data["PaidDA"], 1, $data["KiloSize"]);
+    $data["PaidUA"] = formatBytes($data["PaidUA"], 1, $data["KiloSize"]);
+    $data["PaidTA"] = formatBytes($data["PaidTA"], 1, $data["KiloSize"]);
+    $data["PaidDP"] = formatBytes($data["PaidDP"], 1, $data["KiloSize"]);
+    $data["PaidUP"] = formatBytes($data["PaidUP"], 1, $data["KiloSize"]);
+    $data["PaidTP"] = formatBytes($data["PaidTP"], 1, $data["KiloSize"]);
+    $data["FreeD"] = formatBytes($data["FreeD"], 1, $data["KiloSize"]);
+    $data["FreeU"] = formatBytes($data["FreeU"], 1, $data["KiloSize"]);
+    $data["FreeT"] = formatBytes($data["FreeT"], 1, $data["KiloSize"]);
+    $data["FreeDA"] = formatBytes($data["FreeDA"], 1, $data["KiloSize"]);
+    $data["FreeUA"] = formatBytes($data["FreeUA"], 1, $data["KiloSize"]);
+    $data["FreeTA"] = formatBytes($data["FreeTA"], 1, $data["KiloSize"]);
+    $data["FreeDP"] = formatBytes($data["FreeDP"], 1, $data["KiloSize"]);
+    $data["FreeUP"] = formatBytes($data["FreeUP"], 1, $data["KiloSize"]);
+    $data["FreeTP"] = formatBytes($data["FreeTP"], 1, $data["KiloSize"]);
+    $data["AllD"] = formatBytes($data["AllD"], 1, $data["KiloSize"]);
+    $data["AllU"] = formatBytes($data["AllU"], 1, $data["KiloSize"]);
+    $data["AllT"] = formatBytes($data["AllT"], 1, $data["KiloSize"]);
+    $data["AllDA"] = formatBytes($data["AllDA"], 1, $data["KiloSize"]);
+    $data["AllUA"] = formatBytes($data["AllUA"], 1, $data["KiloSize"]);
+    $data["AllTA"] = formatBytes($data["AllTA"], 1, $data["KiloSize"]);
+    $data["AllDP"] = formatBytes($data["AllDP"], 1, $data["KiloSize"]);
+    $data["AllUP"] = formatBytes($data["AllUP"], 1, $data["KiloSize"]);
+    $data["AllTP"] = formatBytes($data["AllTP"], 1, $data["KiloSize"]);
 
     $data["Success"] = true;
     
@@ -101,14 +101,14 @@
 
 
 // From: http://stackoverflow.com/a/2510540/342378
-function formatBytes($size, $precision = 2)
+function formatBytes($size, $precision = 2, $kiloSize = 1024)
 {
 	if ($size <= 0) return "0 B";
 
-	$base = log($size) / log(1024);
+	$base = log($size) / log($kiloSize);
 	$suffixes = array('B', 'KB', 'MB', 'GB', 'TB');
 
-	return round(pow(1024, $base - floor($base)), $precision) . ' ' . $suffixes[floor($base)];
+	return round(pow($kiloSize, $base - floor($base)), $precision) . ' ' . $suffixes[floor($base)];
 }
 
 function GetAverage($amount)
@@ -139,6 +139,7 @@ function GetUsageStart($type)
 {
     $data["ISP"] = "Start $type";
     $data["FreePeriod"] = true;
+    $data["KiloSize"] = 1000;
     $data["RealTime"] = true;
     $data["Uploads"] = false;
         
