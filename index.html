@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.slate.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/sticky-footer-navbar.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <title>CapSavvInator</title>
+</head>
+<body>
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#" onclick="OpenPanel('Usage');">CapSavvInator</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="#About" onclick="OpenPanel('About');">About</a></li>
+                    <li><a href="#Privacy" onclick="OpenPanel('Privacy');">Privacy</a></li>
+                    <li><a href="#Contact" onclick="OpenPanel('Contact');">Contact</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
+
+    <!-- Begin page content -->
+    <div class="container">
+    
+        <div id="pnlUseHTTPS" class="alert alert-dismissable alert-success" style="display: none;">
+          <button type="button" class="close" data-dismiss="alert">x</button>
+          <strong>NOTE:</strong> You're accessing the plain HTTP version of this site -- I highly recommend you <a href="https://csi.randm.ca/">switch to the HTTPS version</a>!<br />
+        </div>
+
+        <div id="UsagePanel" style="display: none;">
+            <div class="enter-api-key col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+                <p>&nbsp;</p>
+
+                <div class="form-group">
+                    <label class="control-label">Your Username / API Key</label>
+                    <div class="input-group">
+                        <input class="form-control" type="text" id="txtAPIKey" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" id="cmdSaveAPIKey">Save</button>
+                        </span>
+                    </div>
+                    ISP: <span id="lblISP">Unknown</span>
+                    <a class="pull-right" href="#Privacy" onclick="OpenPanel('Privacy');">Is this safe?</a>
+                </div>
+
+                <div id="pnlLoadingData" class="panel panel-info" style="display: none;">
+                    <div class="panel-heading">Requesting usage information from your ISP...</div>
+                    <div class="panel-body text-center">
+                        <br />
+                        <img src="img/Loading.gif" alt="Loading" /><br />
+                        <br />
+                    </div>
+                </div>
+
+                <div id="pnlNoData" class="panel panel-danger" style="display: none;">
+                    <div class="panel-heading">No data to display!</div>
+                    <div class="panel-body">
+                        <p>Sorry, I don't have any data to display for you.</p>
+                        <p>Please double check your Username / API Key and try again.</p>
+                        <p>If it still doesn't work, feel free to <a href="#Contact" onclick="OpenPanel('Contact');">contact me</a>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div id="pnlUsageData" style="display: none;">
+                <div id="pnlPaid">
+                    <h3>Paid Usage Period</h3>
+                    <table class="table table-striped table-hover">
+                        <tr>
+                            <th></th>
+                            <th>Actual</th>
+                            <th><span class="visible-xs">Avg</span><span class="hidden-xs">Average</span></th>
+                            <th><span class="visible-xs">Est'd</span><span class="hidden-xs">Estimated</span></th>
+                        </tr>
+                        <tr class="Download">
+                            <td><span class="visible-xs">Down</span><span class="hidden-xs">Download</span></td>
+                            <td><span id="lblPaidD">...</span></td>
+                            <td><span id="lblPaidDA">...</span></td>
+                            <td><span id="lblPaidDP">...</span></td>
+                        </tr>
+                        <tr class="Upload">
+                            <td><span class="visible-xs">Up</span><span class="hidden-xs">Upload</span></td>
+                            <td><span id="lblPaidU">...</span></td>
+                            <td><span id="lblPaidUA">...</span></td>
+                            <td><span id="lblPaidUP">...</span></td>
+                        </tr>
+                        <tr class="Total">
+                            <td>Total</td>
+                            <td><span id="lblPaidT">...</span></td>
+                            <td><span id="lblPaidTA">...</span></td>
+                            <td><span id="lblPaidTP">...</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div id="pnlFree">
+                    <h3>Free Usage Period</h3>
+                    <table class="table table-striped table-hover">
+                        <tr>
+                            <th></th>
+                            <th>Actual</th>
+                            <th><span class="visible-xs">Avg</span><span class="hidden-xs">Average</span></th>
+                            <th><span class="visible-xs">Est'd</span><span class="hidden-xs">Estimated</span></th>
+                        </tr>
+                        <tr class="Download">
+                            <td><span class="visible-xs">Down</span><span class="hidden-xs">Download</span></td>
+                            <td><span id="lblFreeD">...</span></td>
+                            <td><span id="lblFreeDA">...</span></td>
+                            <td><span id="lblFreeDP">...</span></td>
+                        </tr>
+                        <tr class="Upload">
+                            <td><span class="visible-xs">Up</span><span class="hidden-xs">Upload</span></td>
+                            <td><span id="lblFreeU">...</span></td>
+                            <td><span id="lblFreeUA">...</span></td>
+                            <td><span id="lblFreeUP">...</span></td>
+                        </tr>
+                        <tr class="Total">
+                            <td>Total</td>
+                            <td><span id="lblFreeT">...</span></td>
+                            <td><span id="lblFreeTA">...</span></td>
+                            <td><span id="lblFreeTP">...</span></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div id="pnlAll">
+                    <h3>All Usage</h3>
+                    <table class="table table-striped table-hover">
+                        <tr>
+                            <th></th>
+                            <th>Actual</th>
+                            <th><span class="visible-xs">Avg</span><span class="hidden-xs">Average</span></th>
+                            <th><span class="visible-xs">Est'd</span><span class="hidden-xs">Estimated</span></th>
+                        </tr>
+                        <tr class="Download">
+                            <td><span class="visible-xs">Down</span><span class="hidden-xs">Download</span></td>
+                            <td><span id="lblAllD">...</span></td>
+                            <td><span id="lblAllDA">...</span></td>
+                            <td><span id="lblAllDP">...</span></td>
+                        </tr>
+                        <tr class="Upload">
+                            <td><span class="visible-xs">Up</span><span class="hidden-xs">Upload</span></td>
+                            <td><span id="lblAllU">...</span></td>
+                            <td><span id="lblAllUA">...</span></td>
+                            <td><span id="lblAllUP">...</span></td>
+                        </tr>
+                        <tr class="Total">
+                            <td>Total</td>
+                            <td><span id="lblAllT">...</span></td>
+                            <td><span id="lblAllTA">...</span></td>
+                            <td><span id="lblAllTP">...</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div id="AboutPanel" class="panel panel-default" style="display: none;">
+            <div class="panel-heading">
+                About CapSavvInator
+            </div>
+            <div class="panel-body">
+                <p>
+                    CapSavvInator is a port of <a href="http://www.dslreports.com/forum/r29128976-CapSavvy-v4.3-released-" target="_blank">CapSavvy</a>
+                    from C#.NET to HTML/JavaScript/PHP.
+                </p>
+                <p>
+                    CapSavvy describes itself as "a tool that can retrieve your data transfer usage from most independent ISPs and display it in your system tray",
+                    and CapSavvInator is basically the same thing but it displays your usage on this web page instead of your system tray.
+                </p>
+                <p>
+                    The main purpose of this tool is to provide easy access to your actual and predicted usage data from mobile devices, since
+                    they currently don't have anything like CapSavvy available (EDIT: There are now some usage checkers available, but they're
+                    not available for all devices, and some actually cost money even though they're based on code found in the free and open-source
+                    CapSavvy!)
+                </p>
+                <p>
+                    CapSavvy supports the following ISPs, so in theory I can support all the same ISPs with CapSavvInator, but I only have
+                    an API Key for Start (since I'm a Start customer), so that's the only one that is currently supported.  If you want one
+                    of the others to be supported by this website, you'll need to share your API Key with me (which I'll only use during
+                    testing and delete all record of afterwards).
+                    <ul>
+                        <li>Caneris</li>
+                        <li>Electronicbox</li>
+                        <li>Start</li>
+                        <li>TekSavvy</li>
+                        <li>Videotron</li>
+                    </ul>
+                </p>
+            </div>
+            <div class="panel-footer">
+                <a href="#" onclick="OpenPanel('Usage');">Close Panel</a>
+            </div>
+        </div>
+
+        <div id="ContactPanel" class="panel panel-default" style="display: none;">
+            <div class="panel-heading">
+                Contact
+            </div>
+            <div class="panel-body">
+                If you need to get a hold of me, <a href="http://www.randm.ca/contact" target="_blank">try my R&amp;M contact form</a>.
+            </div>
+            <div class="panel-footer">
+                <a href="#" onclick="OpenPanel('Usage');">Close Panel</a>
+            </div>
+        </div>
+        
+        <div id="PrivacyPanel" class="panel panel-default" style="display: none;">
+            <div class="panel-heading">
+                Privacy &amp; Security
+            </div>
+            <div class="panel-body">
+                <p>
+                    I take the privacy of your Username / API Key very seriously, which is why it is not stored on this web server.
+                    When you enter your Username / API Key and click the Save button, your information is saved using
+                    <a href="http://en.wikipedia.org/wiki/Web_storage" target="_blank">Web Storage</a>, which is browser based 
+                    storage, so your information is stored on your own PC/tablet/phone/whatever and not on this web server.  
+                    This is so when you come back to the site again, you won't have to re-enter your Username / API Key 
+                    (at least not on the same device -- if you come back from a different device then you'll need to re-enter it).
+                </p>
+                <p>
+                    After the Username / API Key is saved to your browser's Web Storage area, it is then submitted to this
+                    web server by your browser.  This submission will use the same protocol that you accessed the site by, so I
+                    highly recommend you <a href="https://csi.randm.ca">access the site using HTTPS</a>.
+                </p>
+                <p>
+                    This web server will then securely transmit your Username / API Key to your ISP's web server, which will
+                    reply back with your usage information.  This web server will then manipulate your usage information 
+                    (ie calculate average and predicated values) and display it all to you in your browser.
+                </p>
+            </div>
+            <div class="panel-footer">
+                <a href="#" onclick="OpenPanel('Usage');">Close Panel</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="footer">
+        <div class="container">
+            <p>
+                &copy; 2014 <a href="http://www.rickparrish.ca">Rick Parrish</a>, <a href="http://www.randm.ca">R&amp;M Software</a><br />
+                <a href="http://www.dslreports.com/forum/r29128976-CapSavvy-v4.3-released-" target="_blank">CapSavvy</a> is &copy; 2014 Adam Zey, Darryl Tam
+            </p>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.0.min.js"><\/script>')</script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>$.fn.modal || document.write('<script src="js/bootstrap.min.js"><\/script>')</script>
+    <script src="js/site.js"></script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-4602017-9', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</body>
+</html>
