@@ -104,6 +104,7 @@
 function formatBytes($size, $precision = 2, $kiloSize = 1024)
 {
 	if ($size <= 0) return "0 B";
+    if (!is_numeric($kiloSize)) return round($size, $precision) . ' ' . $kiloSize;
 
 	$base = log($size) / log($kiloSize);
 	$suffixes = array('B', 'KB', 'MB', 'GB', 'TB');
@@ -167,8 +168,29 @@ function GetUsageStart($type)
 
 function GetUsageTekSavvy()
 {
-    $data["ISP"] = "TekSavvy (unsupported)";
-    ReturnError($data);
+    $data["ISP"] = "TekSavvy";
+    $data["FreePeriod"] = true;
+    $data["KiloSize"] = 'GB';
+    $data["RealTime"] = true;
+    $data["Uploads"] = true;
+
+    $Context = stream_context_create(array(
+        'http' => array(
+            'method' => 'GET',
+            'header' => "TekSavvy-APIKey: " . $_POST['APIKey'] . "\r\n"
+        )
+    ));
+    $Usage = file_get_contents('https://api.teksavvy.com/web/Usage/UsageSummaryRecords?$filter=IsCurrent%20eq%20true', false, $Context);
+    // DEBUG $Usage = '{"odata.metadata":"https://api.teksavvy.com/web/Usage/$metadata#UsageSummaryRecords","value":[{"StartDate":"2014-01-01T00:00:00","EndDate":"2014-01-09T00:00:00","OID":"120000","IsCurrent":true,"OnPeakDownload":12.56,"OnPeakUpload":7.98,"OffPeakDownload":0.1,"OffPeakUpload":1.04},{"StartDate":"2014-01-01T00:00:00","EndDate":"2014-01-09T00:00:00","OID":"320000","IsCurrent":true,"OnPeakDownload":20.56,"OnPeakUpload":9.98,"OffPeakDownload":0.1,"OffPeakUpload":2.07},{"StartDate":"2014-01-01T00:00:00","EndDate":"2014-01-09T00:00:00","OID":"568000","IsCurrent":true,"OnPeakDownload":32.56,"OnPeakUpload":9.98,"OffPeakDownload":54.1,"OffPeakUpload":1.07},{"StartDate":"2014-01-01T00:00:00","EndDate":"2014-01-09T00:00:00","OID":"428000","IsCurrent":true,"OnPeakDownload":32.56,"OnPeakUpload":9.98,"OffPeakDownload":54.1,"OffPeakUpload":1.07}]}';
+    $Obj = json_decode($Usage, true);
+    if ($Obj == NULL) ReturnError($data);
+
+    $data["PaidD"] = $Obj['value'][0]['OnPeakDownload'];
+    $data["PaidU"] = $Obj['value'][0]['OnPeakUpload'];
+    $data["FreeD"] = $Obj['value'][0]['OffPeakDownload'];
+    $data["FreeU"] = $Obj['value'][0]['OffPeakUpload'];
+
+    return $data;
 }
 
 function GetUsageVideotron()
