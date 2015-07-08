@@ -144,8 +144,23 @@ function GetUsageStart($type)
     $data["RealTime"] = true;
     $data["Uploads"] = false;
         
-    $Context = stream_context_create(array('http' => array('header'=>'Connection: close\r\n')));
-    $Usage = file_get_contents('http://www.start.ca/support/capsavvy?code=' . $_POST['APIKey'], false, $Context);
+    // Get cURL resource
+    $curl = curl_init();
+
+    // Set some options - we are passing in a useragent too here
+    curl_setopt_array($curl, array(
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_URL => 'https://www.start.ca/support/capsavvy?code=' . $_POST['APIKey'],
+        CURLOPT_USERAGENT => 'CapSavvInator csi.randm.ca'
+    ));
+
+    // Send the request & save response to $resp
+    $Usage = curl_exec($curl);
+    $data['RawUsage'] = $Usage;
+
+    // Close request to clear up some resources
+    curl_close($curl);
+
     if ($Usage == "ERROR") ReturnError($data);
     
 	$KeyValues = explode(",", $Usage);
@@ -175,13 +190,26 @@ function GetUsageTekSavvy()
     $data["RealTime"] = true;
     $data["Uploads"] = true;
 
-    $Context = stream_context_create(array(
-        'http' => array(
-            'method' => 'GET',
-            'header' => "TekSavvy-APIKey: " . $_POST['APIKey'] . "\r\nConnection: close\r\n"
-        )
+    // Get cURL resource
+    $curl = curl_init();
+
+    // Set some options - we are passing in a useragent too here
+    curl_setopt_array($curl, array(
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_URL => 'https://api.teksavvy.com/web/Usage/UsageSummaryRecords?$filter=IsCurrent%20eq%20true',
+        CURLOPT_USERAGENT => 'CapSavvInator csi.randm.ca'
     ));
-    $Usage = file_get_contents('https://api.teksavvy.com/web/Usage/UsageSummaryRecords?$filter=IsCurrent%20eq%20true', false, $Context);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+        'TekSavvy-APIKey: ' . $_POST['APIKey']
+    ));
+
+    // Send the request & save response to $resp
+    $Usage = curl_exec($curl);
+    $data['RawUsage'] = $Usage;
+
+    // Close request to clear up some resources
+    curl_close($curl);
+
     // DEBUG $Usage = '{"odata.metadata":"https://api.teksavvy.com/web/Usage/$metadata#UsageSummaryRecords","value":[{"StartDate":"2014-01-01T00:00:00","EndDate":"2014-01-09T00:00:00","OID":"120000","IsCurrent":true,"OnPeakDownload":12.56,"OnPeakUpload":7.98,"OffPeakDownload":0.1,"OffPeakUpload":1.04},{"StartDate":"2014-01-01T00:00:00","EndDate":"2014-01-09T00:00:00","OID":"320000","IsCurrent":true,"OnPeakDownload":20.56,"OnPeakUpload":9.98,"OffPeakDownload":0.1,"OffPeakUpload":2.07},{"StartDate":"2014-01-01T00:00:00","EndDate":"2014-01-09T00:00:00","OID":"568000","IsCurrent":true,"OnPeakDownload":32.56,"OnPeakUpload":9.98,"OffPeakDownload":54.1,"OffPeakUpload":1.07},{"StartDate":"2014-01-01T00:00:00","EndDate":"2014-01-09T00:00:00","OID":"428000","IsCurrent":true,"OnPeakDownload":32.56,"OnPeakUpload":9.98,"OffPeakDownload":54.1,"OffPeakUpload":1.07}]}';
     $Obj = json_decode($Usage, true);
     if ($Obj == NULL) ReturnError($data);
