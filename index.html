@@ -37,8 +37,9 @@
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
+                    <li><a href="#" onclick="OpenPanel('Usage');">Home</a></li>
                     <li><a href="#About" onclick="OpenPanel('About');">About</a></li>
-                    <li><a href="#Privacy" onclick="OpenPanel('Privacy');">Privacy</a></li>
+                    <li><a href="#Privacy" onclick="OpenPanel('Privacy');">Privacy &amp; Security</a></li>
                     <li><a href="#Contact" onclick="OpenPanel('Contact');">Contact</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
@@ -249,9 +250,9 @@
                     (at least not on the same device -- if you come back from a different device then you'll need to re-enter it).
                 </p>
                 <p>
-                    After the Username / API Key is saved to your browser's Web Storage area, it is then submitted to this
-                    web server by your browser.  This submission will use the same protocol that you accessed the site by, so I
-                    highly recommend you <a href="https://csi.randm.ca">access the site using HTTPS</a>.
+                    After the Username / API Key is saved to your browser's Web Storage area, it is then submitted to this web server 
+                    via HTTPS, which means it is encrypted and safe from snooping if you happen to be accessing this site from a 
+                    Tim Hortons or something like that.
                 </p>
                 <p>
                     This web server will then securely transmit your Username / API Key to your ISP's web server, which will

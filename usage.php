@@ -144,7 +144,8 @@ function GetUsageStart($type)
     $data["RealTime"] = true;
     $data["Uploads"] = false;
         
-    $Usage = file_get_contents('http://www.start.ca/support/capsavvy?code=' . $_POST['APIKey']);
+    $Context = stream_context_create(array('http' => array('header'=>'Connection: close\r\n')));
+    $Usage = file_get_contents('http://www.start.ca/support/capsavvy?code=' . $_POST['APIKey'], false, $Context);
     if ($Usage == "ERROR") ReturnError($data);
     
 	$KeyValues = explode(",", $Usage);
@@ -177,7 +178,7 @@ function GetUsageTekSavvy()
     $Context = stream_context_create(array(
         'http' => array(
             'method' => 'GET',
-            'header' => "TekSavvy-APIKey: " . $_POST['APIKey'] . "\r\n"
+            'header' => "TekSavvy-APIKey: " . $_POST['APIKey'] . "\r\nConnection: close\r\n"
         )
     ));
     $Usage = file_get_contents('https://api.teksavvy.com/web/Usage/UsageSummaryRecords?$filter=IsCurrent%20eq%20true', false, $Context);
